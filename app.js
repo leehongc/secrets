@@ -84,19 +84,21 @@ app.post("/register", function(req, res){
   });
 });
 
-app.post("/login", function(req, res){
-
+app.post("/login", function(req, res, next) {
   const user = new SecretUser({
     username: req.body.username,
     password: req.body.password
   });
-
   req.login(user, function(err){
     if (err){
       console.log(err);
     } else {
-      passport.authenticate("local")(req, res, function(){
-        res.redirect("/secrets");
+      passport.authenticate('local', function(err, user) {
+        if (err) { next(err); }
+        if (!user) { console.log('Wrong password'); res.render('login', {invalidLogin: true}); } else {
+         res.redirect('/secrets');
+        }
+      })(req, res, function () {
       });
     }
   });
