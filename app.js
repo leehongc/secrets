@@ -29,7 +29,7 @@ app.use(passport.session());
 mongoose.connect("mongodb://127.0.0.1:27017/userDB", {useNewUrlParser: true});
 
 const secretUsersSchema = new mongoose.Schema({
-  username: String,
+  email: String,
   password: String
 });
 
@@ -56,7 +56,7 @@ app.get("/register", function(req, res){
 });
 
 app.get("/secrets", function(req, res){
-  if (req.isAuthenticated){
+  if (req.isAuthenticated()){
     res.render("secrets");
   } else {
     res.redirect("/login");
